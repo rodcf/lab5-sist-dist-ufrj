@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package node;
+
+service Node {
+
+    rpc search(SearchRequest) returns (SearchResponse) {}
+
+    rpc insert(InsertRequest) returns (InsertResponse) {}
+
+    rpc retrieveValue(RetrieveRequest) returns (Value) {}
+
+    rpc storeValue(Value) returns (StoreResponse) {}
+}
+
+message RetrieveRequest {
+}
+
+message StoreResponse {
+}
+
+message Value {
+    string value = 1;
+}
+
+message SearchRequest {
+    int32 seq_num = 1;
+    string key = 2;
+}
+
+message SearchResponse {
+    bool success = 1;
+    optional int32 seq_num_node_stored = 2;
+    optional string value = 3;
+}
+
+message InsertRequest {
+    int32 seq_num = 1;
+    string key = 2;
+    string value = 3;
+}
+
+message InsertResponse {
+    bool success = 1;
+    int32 seq_num_node_stored = 2;
+}

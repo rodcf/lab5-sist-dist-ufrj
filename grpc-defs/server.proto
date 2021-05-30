@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package server;
+
+service Server {
+
+    rpc getNodeList(Request) returns (NodeList) {}
+}
+
+message Request {
+}
+
+message Node {
+    int32 seq_num = 1;
+    string ip = 2;
+    int32 port = 3;
+}
+
+message NodeList {
+    repeated Node nodeList = 1;
+}
