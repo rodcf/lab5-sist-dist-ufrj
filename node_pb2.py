@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\nnode.proto\x12\x04node\"\x11\n\x0fRetrieveRequest\"\x0f\n\rStoreResponse\"\x16\n\x05Value\x12\r\n\x05value\x18\x01 \x01(\t\"-\n\rSearchRequest\x12\x0f\n\x07seq_num\x18\x01 \x01(\x05\x12\x0b\n\x03key\x18\x02 \x01(\t\"y\n\x0eSearchResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12 \n\x13seq_num_node_stored\x18\x02 \x01(\x05H\x00\x88\x01\x01\x12\x12\n\x05value\x18\x03 \x01(\tH\x01\x88\x01\x01\x42\x16\n\x14_seq_num_node_storedB\x08\n\x06_value\"<\n\rInsertRequest\x12\x0f\n\x07seq_num\x18\x01 \x01(\x05\x12\x0b\n\x03key\x18\x02 \x01(\t\x12\r\n\x05value\x18\x03 \x01(\t\">\n\x0eInsertResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x1b\n\x13seq_num_node_stored\x18\x02 \x01(\x05\x32\xdd\x01\n\x04Node\x12\x35\n\x06search\x12\x13.node.SearchRequest\x1a\x14.node.SearchResponse\"\x00\x12\x35\n\x06insert\x12\x13.node.InsertRequest\x1a\x14.node.InsertResponse\"\x00\x12\x35\n\rretrieveValue\x12\x15.node.RetrieveRequest\x1a\x0b.node.Value\"\x00\x12\x30\n\nstoreValue\x12\x0b.node.Value\x1a\x13.node.StoreResponse\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\nnode.proto\x12\x04node\"\x1e\n\x0fRetrieveRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\"!\n\x10RetrieveResponse\x12\r\n\x05value\x18\x01 \x01(\t\"*\n\x0cStoreRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\"\x0f\n\rStoreResponse\"-\n\rSearchRequest\x12\x0f\n\x07seq_num\x18\x01 \x01(\x05\x12\x0b\n\x03key\x18\x02 \x01(\t\"<\n\x0eSearchResponse\x12\x1b\n\x13seq_num_node_stored\x18\x02 \x01(\x05\x12\r\n\x05value\x18\x03 \x01(\t\"<\n\rInsertRequest\x12\x0f\n\x07seq_num\x18\x01 \x01(\x05\x12\x0b\n\x03key\x18\x02 \x01(\t\x12\r\n\x05value\x18\x03 \x01(\t\"-\n\x0eInsertResponse\x12\x1b\n\x13seq_num_node_stored\x18\x02 \x01(\x05\x32\xef\x01\n\x04Node\x12\x35\n\x06search\x12\x13.node.SearchRequest\x1a\x14.node.SearchResponse\"\x00\x12\x35\n\x06insert\x12\x13.node.InsertRequest\x1a\x14.node.InsertResponse\"\x00\x12@\n\rretrieveValue\x12\x15.node.RetrieveRequest\x1a\x16.node.RetrieveResponse\"\x00\x12\x37\n\nstoreValue\x12\x12.node.StoreRequest\x1a\x13.node.StoreResponse\"\x00\x62\x06proto3'
 )
 
 
@@ -33,6 +33,13 @@ _RETRIEVEREQUEST = _descriptor.Descriptor(
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='node.RetrieveRequest.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -46,7 +53,78 @@ _RETRIEVEREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=20,
-  serialized_end=37,
+  serialized_end=50,
+)
+
+
+_RETRIEVERESPONSE = _descriptor.Descriptor(
+  name='RetrieveResponse',
+  full_name='node.RetrieveResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='value', full_name='node.RetrieveResponse.value', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=52,
+  serialized_end=85,
+)
+
+
+_STOREREQUEST = _descriptor.Descriptor(
+  name='StoreRequest',
+  full_name='node.StoreRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='node.StoreRequest.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='node.StoreRequest.value', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=87,
+  serialized_end=129,
 )
 
 
@@ -70,40 +148,8 @@ _STORERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=39,
-  serialized_end=54,
-)
-
-
-_VALUE = _descriptor.Descriptor(
-  name='Value',
-  full_name='node.Value',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='value', full_name='node.Value.value', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=56,
-  serialized_end=78,
+  serialized_start=131,
+  serialized_end=146,
 )
 
 
@@ -141,8 +187,8 @@ _SEARCHREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=80,
-  serialized_end=125,
+  serialized_start=148,
+  serialized_end=193,
 )
 
 
@@ -155,21 +201,14 @@ _SEARCHRESPONSE = _descriptor.Descriptor(
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='success', full_name='node.SearchResponse.success', index=0,
-      number=1, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='seq_num_node_stored', full_name='node.SearchResponse.seq_num_node_stored', index=1,
+      name='seq_num_node_stored', full_name='node.SearchResponse.seq_num_node_stored', index=0,
       number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='value', full_name='node.SearchResponse.value', index=2,
+      name='value', full_name='node.SearchResponse.value', index=1,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -186,19 +225,9 @@ _SEARCHRESPONSE = _descriptor.Descriptor(
   syntax='proto3',
   extension_ranges=[],
   oneofs=[
-    _descriptor.OneofDescriptor(
-      name='_seq_num_node_stored', full_name='node.SearchResponse._seq_num_node_stored',
-      index=0, containing_type=None,
-      create_key=_descriptor._internal_create_key,
-    fields=[]),
-    _descriptor.OneofDescriptor(
-      name='_value', full_name='node.SearchResponse._value',
-      index=1, containing_type=None,
-      create_key=_descriptor._internal_create_key,
-    fields=[]),
   ],
-  serialized_start=127,
-  serialized_end=248,
+  serialized_start=195,
+  serialized_end=255,
 )
 
 
@@ -243,8 +272,8 @@ _INSERTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=250,
-  serialized_end=310,
+  serialized_start=257,
+  serialized_end=317,
 )
 
 
@@ -257,14 +286,7 @@ _INSERTRESPONSE = _descriptor.Descriptor(
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='success', full_name='node.InsertResponse.success', index=0,
-      number=1, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='seq_num_node_stored', full_name='node.InsertResponse.seq_num_node_stored', index=1,
+      name='seq_num_node_stored', full_name='node.InsertResponse.seq_num_node_stored', index=0,
       number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -282,19 +304,14 @@ _INSERTRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=312,
-  serialized_end=374,
+  serialized_start=319,
+  serialized_end=364,
 )
 
-_SEARCHRESPONSE.oneofs_by_name['_seq_num_node_stored'].fields.append(
-  _SEARCHRESPONSE.fields_by_name['seq_num_node_stored'])
-_SEARCHRESPONSE.fields_by_name['seq_num_node_stored'].containing_oneof = _SEARCHRESPONSE.oneofs_by_name['_seq_num_node_stored']
-_SEARCHRESPONSE.oneofs_by_name['_value'].fields.append(
-  _SEARCHRESPONSE.fields_by_name['value'])
-_SEARCHRESPONSE.fields_by_name['value'].containing_oneof = _SEARCHRESPONSE.oneofs_by_name['_value']
 DESCRIPTOR.message_types_by_name['RetrieveRequest'] = _RETRIEVEREQUEST
+DESCRIPTOR.message_types_by_name['RetrieveResponse'] = _RETRIEVERESPONSE
+DESCRIPTOR.message_types_by_name['StoreRequest'] = _STOREREQUEST
 DESCRIPTOR.message_types_by_name['StoreResponse'] = _STORERESPONSE
-DESCRIPTOR.message_types_by_name['Value'] = _VALUE
 DESCRIPTOR.message_types_by_name['SearchRequest'] = _SEARCHREQUEST
 DESCRIPTOR.message_types_by_name['SearchResponse'] = _SEARCHRESPONSE
 DESCRIPTOR.message_types_by_name['InsertRequest'] = _INSERTREQUEST
@@ -308,19 +325,26 @@ RetrieveRequest = _reflection.GeneratedProtocolMessageType('RetrieveRequest', (_
   })
 _sym_db.RegisterMessage(RetrieveRequest)
 
+RetrieveResponse = _reflection.GeneratedProtocolMessageType('RetrieveResponse', (_message.Message,), {
+  'DESCRIPTOR' : _RETRIEVERESPONSE,
+  '__module__' : 'node_pb2'
+  # @@protoc_insertion_point(class_scope:node.RetrieveResponse)
+  })
+_sym_db.RegisterMessage(RetrieveResponse)
+
+StoreRequest = _reflection.GeneratedProtocolMessageType('StoreRequest', (_message.Message,), {
+  'DESCRIPTOR' : _STOREREQUEST,
+  '__module__' : 'node_pb2'
+  # @@protoc_insertion_point(class_scope:node.StoreRequest)
+  })
+_sym_db.RegisterMessage(StoreRequest)
+
 StoreResponse = _reflection.GeneratedProtocolMessageType('StoreResponse', (_message.Message,), {
   'DESCRIPTOR' : _STORERESPONSE,
   '__module__' : 'node_pb2'
   # @@protoc_insertion_point(class_scope:node.StoreResponse)
   })
 _sym_db.RegisterMessage(StoreResponse)
-
-Value = _reflection.GeneratedProtocolMessageType('Value', (_message.Message,), {
-  'DESCRIPTOR' : _VALUE,
-  '__module__' : 'node_pb2'
-  # @@protoc_insertion_point(class_scope:node.Value)
-  })
-_sym_db.RegisterMessage(Value)
 
 SearchRequest = _reflection.GeneratedProtocolMessageType('SearchRequest', (_message.Message,), {
   'DESCRIPTOR' : _SEARCHREQUEST,
@@ -359,8 +383,8 @@ _NODE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=377,
-  serialized_end=598,
+  serialized_start=367,
+  serialized_end=606,
   methods=[
   _descriptor.MethodDescriptor(
     name='search',
@@ -388,7 +412,7 @@ _NODE = _descriptor.ServiceDescriptor(
     index=2,
     containing_service=None,
     input_type=_RETRIEVEREQUEST,
-    output_type=_VALUE,
+    output_type=_RETRIEVERESPONSE,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),
@@ -397,7 +421,7 @@ _NODE = _descriptor.ServiceDescriptor(
     full_name='node.Node.storeValue',
     index=3,
     containing_service=None,
-    input_type=_VALUE,
+    input_type=_STOREREQUEST,
     output_type=_STORERESPONSE,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,

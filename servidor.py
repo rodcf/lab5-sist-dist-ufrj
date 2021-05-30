@@ -6,6 +6,7 @@ import node_pb2_grpc
 import hashlib
 import multiprocessing
 from concurrent import futures
+from collections import OrderedDict
 
 NUMBER_OF_NODES = 16
 ID_BIT_LENGTH = 160
@@ -20,7 +21,7 @@ seq_num_to_node_address = {}
 address_to_seq_num = {}
 address_to_finger_table = {}
 
-value = None
+key_value = {}
 
 def hashing(key):
 
@@ -35,7 +36,7 @@ def createFingerTables(node_id_list, id_to_node_address):
 
     for node_id in node_id_list:
 
-        finger_table = {}
+        finger_table = OrderedDict()
 
         for i in range(ID_BIT_LENGTH):
             _value = (node_id + (2 ** i)) % (2 ** ID_BIT_LENGTH)
@@ -120,19 +121,16 @@ class NodeServicer(node_pb2_grpc.NodeServicer):
 
     def retrieveValue(self, request, context):
 
-        return node_pb2.Value(value=value)
+        return node_pb2.RetrieveResponse(value=key_value[request.key])
 
     def storeValue(self, request, context):
 
-        global value
-        value = request.value
+        global key_value
+        key_value[request.key] = request.value
 
         return node_pb2.StoreResponse()
 
     def search(self, request, context):
-
-        if request.seq_num not in seq_num_to_node_address.keys():
-            return node_pb2.SearchResponse(success=False)
 
         address = seq_num_to_node_address[request.seq_num]
 
@@ -140,27 +138,22 @@ class NodeServicer(node_pb2_grpc.NodeServicer):
 
         key_id = hashing(request.key)
 
-        nodes = sorted(list(finger_table.items()), key=lambda x: x[0])
+        nodes = list(finger_table.items())
+
+        current_id = hashing(f'{address[0]}:{address[1]}')
 
         successor = nodes[0]
-        sucessor_id = hashing(f'{successor[1][0]}:{successor[1][1]}')
+        successor_id = hashing(f'{successor[1][0]}:{successor[1][1]}')
 
-        if successor[0] <= key_id <= sucessor_id:
+        if current_id < key_id <= successor_id:
             channel = grpc.insecure_channel(f'{successor[1][0]}:{successor[1][1]}')
             stub = node_pb2_grpc.NodeStub(channel)
 
-            retrieved_value = stub.retrieveValue(node_pb2.Value()).value
+            retrieved_value = stub.retrieveValue(node_pb2.RetrieveRequest(key=request.key)).value
 
             print('retrieved_value:', retrieved_value)
 
-            if not retrieved_value:
-                return node_pb2.SearchResponse(success=False)
-
-            return node_pb2.SearchResponse(success=True, seq_num_node_stored=address_to_seq_num[successor[1]],
-                                           value=retrieved_value)
-
-        # predecessors
-        # candidates = [node for node in list(nodes) if node[0] < node_id]
+            return node_pb2.SearchResponse(seq_num_node_stored=address_to_seq_num[successor[1]], value=retrieved_value)
 
         for node in reversed(nodes):
 
@@ -183,17 +176,7 @@ class NodeServicer(node_pb2_grpc.NodeServicer):
 
         return stub.search(search_request)
 
-        # print('retrieved_value:', value)
-        #
-        # if not value:
-        #     return node_pb2.SearchResponse(success=False)
-        #
-        # return node_pb2.SearchResponse(success=True, seq_num_node_stored=request.seq_num, value=value)
-
     def insert(self, request, context):
-
-        if request.seq_num not in seq_num_to_node_address.keys():
-            return node_pb2.InsertResponse(success=False)
 
         address = seq_num_to_node_address[request.seq_num]
 
@@ -201,28 +184,27 @@ class NodeServicer(node_pb2_grpc.NodeServicer):
 
         key_id = hashing(request.key)
 
-        nodes = sorted(list(finger_table.items()), key=lambda x: x[0])
+        nodes = list(finger_table.items())
+
+        current_id = hashing(f'{address[0]}:{address[1]}')
 
         successor = nodes[0]
         successor_id = hashing(f'{successor[1][0]}:{successor[1][1]}')
 
-        if successor[0] <= key_id <= successor_id:
+        if current_id < key_id <= successor_id:
             channel = grpc.insecure_channel(f'{successor[1][0]}:{successor[1][1]}')
             stub = node_pb2_grpc.NodeStub(channel)
 
-            value_to_store = node_pb2.Value(value=request.value)
+            value_to_store = node_pb2.StoreRequest(key=request.key, value=request.value)
 
             stub.storeValue(value_to_store)
 
-            return node_pb2.InsertResponse(success=True, seq_num_node_stored=address_to_seq_num[successor[1]])
-
-        # predecessors
-        # candidates = [node for node in list(nodes) if node[0] < node_id]
+            return node_pb2.InsertResponse(seq_num_node_stored=address_to_seq_num[successor[1]])
 
         for node in reversed(nodes):
 
             node_id = hashing(f'{node[1][0]}:{node[1][1]}')
-            if successor[0] <= node_id < key_id:
+            if current_id < node_id < key_id:
 
                 channel = grpc.insecure_channel(f'{node[1][0]}:{node[1][1]}')
                 stub = node_pb2_grpc.NodeStub(channel)
@@ -241,10 +223,6 @@ class NodeServicer(node_pb2_grpc.NodeServicer):
                                                 value=request.value)
 
         return stub.insert(insert_request)
-
-        # global value
-        # value = request.value
-        # return node_pb2.InsertResponse(success=True, seq_num_node_stored=request.seq_num)
 
 def main():
     global seq_num_to_node_address

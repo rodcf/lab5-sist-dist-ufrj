@@ -8,19 +8,25 @@ service Node {
 
     rpc insert(InsertRequest) returns (InsertResponse) {}
 
-    rpc retrieveValue(RetrieveRequest) returns (Value) {}
+    rpc retrieveValue(RetrieveRequest) returns (RetrieveResponse) {}
 
-    rpc storeValue(Value) returns (StoreResponse) {}
+    rpc storeValue(StoreRequest) returns (StoreResponse) {}
 }
 
 message RetrieveRequest {
+    string key = 1;
+}
+
+message RetrieveResponse {
+    string value = 1;
+}
+
+message StoreRequest {
+    string key = 1;
+    string value = 2;
 }
 
 message StoreResponse {
-}
-
-message Value {
-    string value = 1;
 }
 
 message SearchRequest {
@@ -29,9 +35,8 @@ message SearchRequest {
 }
 
 message SearchResponse {
-    bool success = 1;
-    optional int32 seq_num_node_stored = 2;
-    optional string value = 3;
+    int32 seq_num_node_stored = 2;
+    string value = 3;
 }
 
 message InsertRequest {
@@ -41,6 +46,5 @@ message InsertRequest {
 }
 
 message InsertResponse {
-    bool success = 1;
     int32 seq_num_node_stored = 2;
 }

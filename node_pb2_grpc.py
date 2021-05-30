@@ -27,11 +27,11 @@ class NodeStub(object):
         self.retrieveValue = channel.unary_unary(
                 '/node.Node/retrieveValue',
                 request_serializer=node__pb2.RetrieveRequest.SerializeToString,
-                response_deserializer=node__pb2.Value.FromString,
+                response_deserializer=node__pb2.RetrieveResponse.FromString,
                 )
         self.storeValue = channel.unary_unary(
                 '/node.Node/storeValue',
-                request_serializer=node__pb2.Value.SerializeToString,
+                request_serializer=node__pb2.StoreRequest.SerializeToString,
                 response_deserializer=node__pb2.StoreResponse.FromString,
                 )
 
@@ -79,11 +79,11 @@ def add_NodeServicer_to_server(servicer, server):
             'retrieveValue': grpc.unary_unary_rpc_method_handler(
                     servicer.retrieveValue,
                     request_deserializer=node__pb2.RetrieveRequest.FromString,
-                    response_serializer=node__pb2.Value.SerializeToString,
+                    response_serializer=node__pb2.RetrieveResponse.SerializeToString,
             ),
             'storeValue': grpc.unary_unary_rpc_method_handler(
                     servicer.storeValue,
-                    request_deserializer=node__pb2.Value.FromString,
+                    request_deserializer=node__pb2.StoreRequest.FromString,
                     response_serializer=node__pb2.StoreResponse.SerializeToString,
             ),
     }
@@ -143,7 +143,7 @@ class Node(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/node.Node/retrieveValue',
             node__pb2.RetrieveRequest.SerializeToString,
-            node__pb2.Value.FromString,
+            node__pb2.RetrieveResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -159,7 +159,7 @@ class Node(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/node.Node/storeValue',
-            node__pb2.Value.SerializeToString,
+            node__pb2.StoreRequest.SerializeToString,
             node__pb2.StoreResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

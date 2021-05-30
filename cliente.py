@@ -26,21 +26,38 @@ def initialize():
 
 def handleInsert():
 
-    seq_num = input(f'A partir de qual nó deseja inserir? Digite um número de 1 a {NUMBER_OF_NODES}:\nR: ')
+    while True:
+        seq_num = input(f'A partir de qual nó deseja inserir? Digite um número de 1 a {NUMBER_OF_NODES}:\nR: ')
 
-    try:
-        seq_num = int(seq_num)
-    except ValueError:
-        print(f'ERRO: O valor deve ser um número inteiro entre 1 e {NUMBER_OF_NODES}')
-        return
+        try:
+            seq_num = int(seq_num)
+        except ValueError:
+            print(f'ERRO: O valor deve ser um número inteiro entre 1 e {NUMBER_OF_NODES}')
+            continue
 
-    if seq_num not in range(1, NUMBER_OF_NODES + 1):
-        print(f'ERRO: Nó {seq_num} não existe!')
-        return
+        if seq_num not in range(1, NUMBER_OF_NODES + 1):
+            print(f'ERRO: Nó {seq_num} não existe!')
+            continue
 
-    key = input('Qual será a chave?\nR: ')
+        break
 
-    value = input('Qual será o valor a ser inserido nessa chave?\nR: ')
+    while True:
+        key = input('Qual será a chave?\nR: ')
+
+        if not key:
+            print(f'ERRO: A chave não pode ser vazia!')
+            continue
+
+        break
+
+    while True:
+        value = input('Qual será o valor a ser inserido nessa chave?\nR: ')
+
+        if not value:
+            print(f'ERRO: O valor não pode ser vazio!')
+            continue
+
+        break
 
     address = node_list[seq_num]
 
@@ -51,25 +68,33 @@ def handleInsert():
 
     insert_response = stub.insert(insert_request)
 
-    print(insert_response)
-
-    print('inserted in:', node_list[insert_response.seq_num_node_stored])
+    print(f'Valor armazenado para a chave "{key}" no nó {insert_response.seq_num_node_stored}: "{value}".')
 
 def handleSearch():
 
-    seq_num = input(f'A partir de qual nó deseja buscar? Digite um número de 1 a {NUMBER_OF_NODES}:\nR: ')
+    while True:
+        seq_num = input(f'A partir de qual nó deseja buscar? Digite um número de 1 a {NUMBER_OF_NODES}:\nR: ')
 
-    try:
-        seq_num = int(seq_num)
-    except ValueError:
-        print(f'ERRO: O valor deve ser um número inteiro entre 1 e {NUMBER_OF_NODES}')
-        return
+        try:
+            seq_num = int(seq_num)
+        except ValueError:
+            print(f'ERRO: O valor deve ser um número inteiro entre 1 e {NUMBER_OF_NODES}')
+            continue
 
-    if seq_num not in range(1, NUMBER_OF_NODES + 1):
-        print(f'ERRO: Nó {seq_num} não existe!')
-        return
+        if seq_num not in range(1, NUMBER_OF_NODES + 1):
+            print(f'ERRO: Nó {seq_num} não existe!')
+            continue
 
-    key = input('Qual a chave que deseja buscar?\nR: ')
+        break
+
+    while True:
+        key = input('Qual a chave que deseja buscar?\nR: ')
+
+        if not key:
+            print(f'ERRO: A chave não pode ser vazia!')
+            continue
+
+        break
 
     address = node_list[seq_num]
 
@@ -80,7 +105,7 @@ def handleSearch():
 
     search_response = stub.search(search_request)
 
-    if not search_response.success:
+    if not search_response.value:
         print(f'Valor para a chave "{key}" não encontrado nos nós.')
 
     else:
@@ -94,12 +119,11 @@ def main():
 
     node_list = initialize()
 
-    print('Lista de nós com seus respectivos endereços:', node_list)
-
     while True:
 
         option = input(
-            'O que deseja fazer? Digite um número de 1 a 3:\n1 - Inserir par chave/valor\n2 - Buscar por chave\n3 - Encerrar aplicação\nR: ')
+            'O que deseja fazer? Digite um número de 1 a 4:\n1 - Inserir par chave/valor\n2 - Buscar por chave\n'
+            '3 - Listar endereços dos nós\n4 - Encerrar aplicação\nR: ')
 
         if option == '1':
             handleInsert()
@@ -108,6 +132,9 @@ def main():
             handleSearch()
 
         elif option == '3':
+            print('Lista de nós com seus respectivos endereços:', node_list)
+
+        elif option == '4':
             print('Encerrando cliente...')
             break
 
