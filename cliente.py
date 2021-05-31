@@ -4,13 +4,18 @@ import server_pb2_grpc
 import node_pb2
 import node_pb2_grpc
 
+# localização do servidor
 IP = 'localhost'
 SERVER_PORT = 5000
 
+# número de nós no anel
 NUMBER_OF_NODES = 16
 
+# dicionário contendo os ids sequenciais e o endereço de cada nó do anel
 node_list = {}
 
+# inicializa a conexão com o servidor via RPC
+# e recupera, do servidor, o dicionário contendo os ids sequenciais e o endereço de cada nó do anel
 def initialize():
     _node_list = {}
 
@@ -24,6 +29,8 @@ def initialize():
 
     return _node_list
 
+# trata os inputs do usuário relacionados à inserção de pares chave/valor e
+# faz chamada ao servidor para inserir os pares passados pelo usuário em um dos nós do anel
 def handleInsert():
 
     while True:
@@ -70,6 +77,8 @@ def handleInsert():
 
     print(f'Valor armazenado para a chave "{key}" no nó {insert_response.seq_num_node_stored}: "{value}".')
 
+# trata os inputs do usuário relacionados à busca de um valor associado à uma determinada chave e
+# faz chamada ao servidor para buscar o valor da chave passada pelo usuário em um dos nós do anel
 def handleSearch():
 
     while True:
@@ -111,14 +120,18 @@ def handleSearch():
     else:
         print(f'Valor para a chave "{key}" encontrada no nó {search_response.seq_num_node_stored}: "{search_response.value}".')
 
+# loop principal do programa
 def main():
 
     print('Iniciando cliente...')
 
+    # variável global
     global node_list
 
+    # inicializa o serviço RPC cliente e recebe o valor do dicionário global de endereços dos nós
     node_list = initialize()
 
+    # loop para tratamento de inputs do usuário
     while True:
 
         option = input(

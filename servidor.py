@@ -8,21 +8,35 @@ import multiprocessing
 from concurrent import futures
 from collections import OrderedDict
 
+# número de nós no anel
 NUMBER_OF_NODES = 16
+
+# número de bits nos ids
 ID_BIT_LENGTH = 160
 
+# localizacao do servidor
 IP = 'localhost'
 SERVER_PORT = 5000
+
+# porta do primeiro nó no anel
 INITIAL_NODE_PORT = 5001
 
+# número de threads a serem usadas em cada processo
 THREAD_CONCURRENCY = multiprocessing.cpu_count()
 
+# dicionário de id sequencial para endereço de cada nó
 seq_num_to_node_address = {}
+
+# dicionário de endereço para id sequencial de cada nó
 address_to_seq_num = {}
+
+# dicionário de endereço para a tabela de apontamentos de cada nó
 address_to_finger_table = {}
 
+# dicionário para armazenar os pares chave/valor de cada nó
 key_value = {}
 
+# gera uma hash (SHA1) a partir de uma chave
 def hashing(key):
 
     hash = hashlib.sha1(key.encode()).hexdigest()
@@ -30,6 +44,7 @@ def hashing(key):
 
     return node_id
 
+# cria as tabelas de apontamentos para todos os nós do anel
 def createFingerTables(node_id_list, id_to_node_address):
 
     _address_to_finger_table = {}
@@ -52,12 +67,12 @@ def createFingerTables(node_id_list, id_to_node_address):
 
     return _address_to_finger_table
 
+# inicializa os nós e atribui uma porta para cada um (portas sequenciais)
 def initialize():
 
     port_list = [INITIAL_NODE_PORT + i for i in range(NUMBER_OF_NODES)]
     node_id_list = []
     id_to_node_address = {}
-    _node_id_to_seq_num = {}
     _seq_num_to_node_address = {}
 
     for i in range(NUMBER_OF_NODES):
@@ -76,6 +91,7 @@ def initialize():
 
     return _seq_num_to_node_address, _address_to_seq_num, _address_to_finger_table
 
+# inicia o servidor (processo pai)
 def runServer(bind_address):
 
     options = (('grpc.so_reuseport', 1),)
@@ -90,6 +106,7 @@ def runServer(bind_address):
     except KeyboardInterrupt:
         server.stop(None)
 
+# inicia os nós (processos filhos)
 def runNode(seq_num, bind_address):
 
     options = (('grpc.so_reuseport', 1),)
@@ -106,9 +123,12 @@ def runNode(seq_num, bind_address):
     except KeyboardInterrupt:
         server.stop(None)
 
+# classe do serviço RPC para o servidor (processo pai)
 class ServerServicer(server_pb2_grpc.ServerServicer):
 
+    # retorna o dicionário contendo os ids sequenciais e o endereço de cada nó do anel
     def getNodeList(self, request, context):
+
         node_list = server_pb2.NodeList()
 
         for k, v in seq_num_to_node_address.items():
@@ -117,12 +137,15 @@ class ServerServicer(server_pb2_grpc.ServerServicer):
 
         return node_list
 
+# classe do serviço RPC para os nós (processos filhos) 
 class NodeServicer(node_pb2_grpc.NodeServicer):
 
+    # retorna o valor atribuído à chave passada na requisição
     def retrieveValue(self, request, context):
 
         return node_pb2.RetrieveResponse(value=key_value[request.key])
 
+    # armazena o par chave/valor passado na requisição
     def storeValue(self, request, context):
 
         global key_value
@@ -130,6 +153,7 @@ class NodeServicer(node_pb2_grpc.NodeServicer):
 
         return node_pb2.StoreResponse()
 
+    # busca nos nós do anel o valor atribuído à chave passada na requisição
     def search(self, request, context):
 
         address = seq_num_to_node_address[request.seq_num]
@@ -176,6 +200,7 @@ class NodeServicer(node_pb2_grpc.NodeServicer):
 
         return stub.search(search_request)
 
+    # insere em um dos nós do anel o par chave/valor passado na requisição
     def insert(self, request, context):
 
         address = seq_num_to_node_address[request.seq_num]
@@ -225,14 +250,19 @@ class NodeServicer(node_pb2_grpc.NodeServicer):
         return stub.insert(insert_request)
 
 def main():
+
+    # variáveis globais
     global seq_num_to_node_address
     global address_to_seq_num
     global address_to_finger_table
 
+    # lista para armazenar os processos filhos
     processes = []
 
+    # inicializa os nós e cria os dicionários globais
     seq_num_to_node_address, address_to_seq_num, address_to_finger_table = initialize()
 
+    # inicia os processos filhos, que rodarão o serviço RPC dos nós
     for node in seq_num_to_node_address.items():
         seq_num = node[0]
         bind_address = f'{node[1][0]}:{node[1][1]}'
@@ -242,8 +272,10 @@ def main():
         process.start()
         processes.append(process)
 
+    # inicia o serviço RPC do servidor, para atender as requisições do cliente
     runServer(f'{IP}:{SERVER_PORT}')
 
+    # aguarda todos os processos filhos finalizarem
     for process in processes:
         process.join()
 
